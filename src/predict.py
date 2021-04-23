@@ -1,6 +1,7 @@
 import argparse
 import pandas as pd
 from model import BaselineModel
+import test_import
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_csv', default='input.csv')
@@ -20,4 +21,4 @@ y_predictions = BaselineModel(model_file_path='src/model.pickle').predict(df)
 df_predictions = pd.DataFrame({'prediction': y_predictions})
 df_predictions.to_csv(output_file_path, index=False)
 
-print(f'6.9309')
+print(test_import.score())
