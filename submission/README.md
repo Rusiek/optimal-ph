@@ -1,4 +1,4 @@
-# Krebs Bicycle
+# Krebs-Bicycle
 
 Our team is from Kraków, Poland. We have no idea what we're doing, but we're trying our best.
 ### Project Description
