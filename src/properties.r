@@ -1,6 +1,3 @@
-install.packages("protr",repos = "http://cran.us.r-project.org")
-install.packages("Peptides",repos = "http://cran.us.r-project.org")
-
 library(protr)
 library(Peptides)
 
