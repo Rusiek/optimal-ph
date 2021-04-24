@@ -75,7 +75,7 @@ class SVRModelScaled:
         scaler = StandardScaler().fit(X)
         X = scaler.transform(X)
 
-        model = SVR(C=10.0, epsilon=0.1)
+        model = SVR(C=9.5, epsilon=0.1)
         model.fit(X, y)
 
         with open(self.model_file_path, 'wb') as model_file:
