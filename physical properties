@@ -1,0 +1,57 @@
+setwd("D:/Projekty/zad_dom1")
+
+install.packages("protr")
+install.packages("Peptides")
+
+library(protr)
+library(Peptides)
+
+proteinseq <- read.csv(file='train_set.csv')
+
+head(proteinseq$ď.żmean_growth_PH )
+
+pureseq <- proteinseq$sequence
+
+
+
+head(pureseq)
+
+properties <- function(proteins){
+    df <- data.frame( 1:length(pureseq),
+    pI(proteins,  pKscale = "EMBOSS"), lengthpep(proteins), hydrophobicity(proteins, scale = "KyteDoolittle"),
+    mw(proteins, monoisotopic = FALSE, label = "none", aaShift = NULL), aIndex(proteins) )
+
+    names(df) <- c('ID', 'isoelectricity', 'length', 'hydrophobicity', 'weight', 'aliphatic')
+
+    return(df)
+}
+
+head(properties(pureseq))
+
+prop <- properties(pureseq)
+
+
+write.csv(properties(pureseq), file="properties.csv")
+
+coriso<-cor.test(x=prop$isoelectricity, y=proteinseq$ď.żmean_growth_PH, method="spearman" )
+corlength<-cor.test(x=prop$length, y=proteinseq$ď.żmean_growth_PH, method="spearman" )
+corhydro<-cor.test(x=prop$hydrophobicity, y=proteinseq$ď.żmean_growth_PH, method="spearman" )
+corweight<-cor.test(x=prop$weight, y=proteinseq$ď.żmean_growth_PH, method="spearman" )
+coraliph<-cor.test(x=prop$aliphatic, y=proteinseq$ď.żmean_growth_PH, method="spearman" )
+
+coriso$estimate
+corlength
+corhydro
+corweight
+coraliph
+
+cordf<- data.frame(prop_name=c('isoelectricity', 'length', 'hydrophobicity', 'weight', 'aliphatic'),
+correlation=c(coriso$estimate, corlength$estimate, corhydro$estimate, corweight$estimate, coraliph$estimate))
+
+
+cordf
+
+write.csv(cordf, "correlationsprot.csv")
+
+
+onemer <- read.table(file = '1-mers.tsv', sep = '\t', header = TRUE)
