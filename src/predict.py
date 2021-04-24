@@ -1,6 +1,6 @@
 import argparse
 import pandas as pd
-from model import BaselineModel
+from model import SVRModel
 import test_import
 
 parser = argparse.ArgumentParser()
@@ -15,7 +15,7 @@ with open(args.input_csv) as input_csv:
     df = pd.read_csv(input_csv)
 
 # Run predictions
-y_predictions = BaselineModel(model_file_path='src/model.pickle').predict(df)
+y_predictions = SVRModel(model_file_path='src/svr-model.pickle').predict(df)
 
 # Save predictions to file
 df_predictions = pd.DataFrame({'prediction': y_predictions})

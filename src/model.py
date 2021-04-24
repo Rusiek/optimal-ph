@@ -1,7 +1,8 @@
-from sklearn import tree
+from sklearn.svm import SVR
 import numpy as np
 import pickle
 
+import get_kmers
 
 class BaselineModel:
     def __init__(self, model_file_path):
@@ -28,3 +29,29 @@ class BaselineModel:
         X = df_test['sequence'].to_numpy()
         X_vectorized = self.vectorize_sequences(X)
         return model.predict(X_vectorized)
+
+
+class SVRModel:
+    def __init__(self, model_file_path):
+        self.model_file_path = model_file_path
+
+
+    def train(self, df_train):
+        limited_train = df_train[df_train.representative & ~df_train.is7]
+        frequencies = get_kmers.get_features(limited_train.sequence, kmerlen=1)
+        X = frequencies.to_numpy()
+        y = limited_train.mean_growth_PH.to_numpy() 
+
+        model = SVR(C=10.0, epsilon=0.1)
+        model.fit(X, y)
+
+        with open(self.model_file_path, 'wb') as model_file:
+            pickle.dump(model, model_file)
+
+
+    def predict(self, df_test):
+        with open(self.model_file_path, 'rb') as model_file:
+            model: SVR = pickle.load(model_file)
+
+        X = get_kmers.get_features(df_test.sequence, kmerlen=1).to_numpy()
+        return model.predict(X)
