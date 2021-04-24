@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 import os
 
-from model import SVRModel
+from model import SVRModelScaled
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_csv', default='input.csv')
@@ -24,7 +24,8 @@ phychem = pd.read_csv("physchem-properties.csv", index_col=0).drop("ID", axis=1)
 features = pd.concat([aa_frequencies, phychem], axis=1)
 
 # Run predictions
-y_predictions = SVRModel(model_file_path='src/svr-model.pickle').predict(features)
+y_predictions = SVRModelScaled(model_file_path='src/svr-model-physchem.pickle',
+                               scaler_file_path='src/svr-scaler-physchem.pickle').predict(features)
 
 # Save predictions to file
 df_predictions = pd.DataFrame({'prediction': y_predictions})

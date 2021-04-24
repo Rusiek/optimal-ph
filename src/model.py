@@ -92,4 +92,5 @@ class SVRModelScaled:
             scaler: SVR = pickle.load(scaler_file)
 
         X = get_kmers.get_features(df_test.sequence, kmerlen=1).to_numpy()
+        X = scaler.transform(X)
         return model.predict(X)
