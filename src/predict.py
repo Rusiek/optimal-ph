@@ -20,5 +20,4 @@ y_predictions = SVRModel(model_file_path='src/svr-model.pickle').predict(df)
 # Save predictions to file
 df_predictions = pd.DataFrame({'prediction': y_predictions})
 df_predictions.to_csv(output_file_path, index=False)
-
-print(test_import.score())
+print("Thanks, come again!")
