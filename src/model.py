@@ -46,7 +46,7 @@ class SVRModel:
         X = frequencies.to_numpy()
         y = limited_train.mean_growth_PH.to_numpy() 
 
-        model = SVR(C=10.0, epsilon=0.1)
+        model = SVR(C=9.5, epsilon=0.1)
         model.fit(X, y)
 
         with open(self.model_file_path, 'wb') as model_file:
