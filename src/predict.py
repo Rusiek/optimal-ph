@@ -18,14 +18,13 @@ assert exit_code == 0
 
 # Load input.csv
 with open(args.input_csv) as input_csv:
-    aa_frequencies = pd.read_csv(input_csv)
+    input_table = pd.read_csv(input_csv)
 
 phychem = pd.read_csv("physchem-properties.csv", index_col=0).drop("ID", axis=1).reset_index(drop=True)
-features = pd.concat([aa_frequencies, phychem], axis=1)
 
 # Run predictions
 y_predictions = SVRModelScaled(model_file_path='src/svr-model-physchem.pickle',
-                               scaler_file_path='src/svr-scaler-physchem.pickle').predict(features)
+                               scaler_file_path='src/svr-scaler-physchem.pickle').predict(input_table, phychem)
 
 # Save predictions to file
 df_predictions = pd.DataFrame({'prediction': y_predictions})

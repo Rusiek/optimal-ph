@@ -1,6 +1,7 @@
 from sklearn.svm import SVR
 from sklearn.preprocessing import StandardScaler
 
+import pandas as pd
 import numpy as np
 import pickle
 
@@ -66,10 +67,14 @@ class SVRModelScaled:
         self.scaler_file_path = scaler_file_path
 
 
-    def train(self, df_train):
-        limited_train = df_train[df_train.representative & ~df_train.is7]
-        frequencies = get_kmers.get_features(limited_train.sequence, kmerlen=1)
-        X = frequencies.to_numpy()
+    def train(self, df_train, phychem):
+        selection = df_train.representative
+        limited_train = df_train[selection]
+        phychem = phychem[selection]
+
+        aa_frequencies = get_kmers.get_features(limited_train.sequence, kmerlen=1)
+        aa_frequencies.index = limited_train.index
+        X = pd.concat([aa_frequencies, phychem], axis=1).to_numpy()
         y = limited_train.mean_growth_PH.to_numpy() 
 
         scaler = StandardScaler().fit(X)
@@ -84,13 +89,15 @@ class SVRModelScaled:
             pickle.dump(scaler, scaler_file)
 
 
-    def predict(self, df_test):
+    def predict(self, df_test, phychem):
         with open(self.model_file_path, 'rb') as model_file:
             model: SVR = pickle.load(model_file)
 
         with open(self.scaler_file_path, 'rb') as scaler_file:
             scaler: SVR = pickle.load(scaler_file)
 
-        X = get_kmers.get_features(df_test.sequence, kmerlen=1).to_numpy()
+        aa_frequencies = get_kmers.get_features(df_test.sequence, kmerlen=1)
+        X = pd.concat([aa_frequencies, phychem], axis=1).to_numpy()
+        print(X.shape)
         X = scaler.transform(X)
         return model.predict(X)
