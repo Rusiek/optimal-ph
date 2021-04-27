@@ -26,7 +26,7 @@ phychem = pd.read_csv("physchem-properties.csv", index_col=0).drop("ID", axis=1)
 y_predictions = SVRModelScaled(model_file_path='src/svr-model-physchem.pickle',
                                scaler_file_path='src/svr-scaler-physchem.pickle').predict(input_table, phychem)
 
-for i in range(len(y_predictions))
+for i in range(1, len(y_predictions))
     y_predictions[i] = round(y_predictions[i], 1)
 
 # Save predictions to file
